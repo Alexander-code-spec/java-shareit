@@ -102,7 +102,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void valid(ItemDto itemDto) {
-        if (itemDto.getAvailable() == null || itemDto.getName() == null || itemDto.getDescription()==null) {
+        if (itemDto.getAvailable() == null || itemDto.getName() == null || itemDto.getDescription() == null) {
             throw new IncorrectParameterException("Некорректно заданы поля в запросе");
         } else if (itemDto.getName().isEmpty() || itemDto.getDescription().isEmpty()) {
             throw new IncorrectParameterException("Некорректно заданы поля в запросе");

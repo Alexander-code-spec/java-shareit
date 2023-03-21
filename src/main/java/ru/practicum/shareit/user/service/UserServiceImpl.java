@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
 
     @Autowired
-    public UserServiceImpl(UserStorage userStorage){
+    public UserServiceImpl(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 

@@ -60,11 +60,11 @@ public class UserStorageImpl implements UserStorage {
     }
 
     @Override
-    public List<User> getAll(){
+    public List<User> getAll() {
         return new ArrayList<>(users.values());
     }
 
-    public void valid(User user, Boolean patchFlag){
+    public void valid(User user, Boolean patchFlag) {
         Optional<User> obj = Optional.of(user);
 
         if (!obj.isPresent()) {
@@ -92,13 +92,13 @@ public class UserStorageImpl implements UserStorage {
         return m.matches();
     }
 
-    public Optional<User> checkPatchEmail(String email, Integer id){
+    public Optional<User> checkPatchEmail(String email, Integer id) {
         return users.values().stream()
                 .filter(user -> Objects.equals(user.getEmail(), email) && !Objects.equals(user.getId(), id))
                 .findAny();
     }
 
-    public boolean checkEmail(String email){
+    public boolean checkEmail(String email) {
         for (User user: users.values()) {
             if (user.getEmail().equals(email)) {
                 return true;
