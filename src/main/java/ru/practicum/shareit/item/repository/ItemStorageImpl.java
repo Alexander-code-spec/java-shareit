@@ -21,9 +21,9 @@ public class ItemStorageImpl implements ItemStorage {
 
     @Override
     public Item getItemById(Integer id) {
-        if(id == null) {
+        if (id == null) {
             throw new IncorrectParameterException("Не задан id!");
-        } else if(!items.containsKey(id)) {
+        } else if (!items.containsKey(id)) {
             throw new ObjectNotFoundException("Вещь с id " + id + " не найден");
         }
         return items.get(id);
