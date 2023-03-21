@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.errors.exception.IncorrectParameterException;
 import ru.practicum.shareit.errors.exception.ObjectNotFoundException;
-import ru.practicum.shareit.errors.exception.ParameterException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -27,7 +26,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserStorage userStorage;
 
     @Autowired
-    public ItemServiceImpl(ItemStorage itemStorage, UserStorage userStorage){
+    public ItemServiceImpl(ItemStorage itemStorage, UserStorage userStorage) {
         this.itemStorage = itemStorage;
         this.userStorage = userStorage;
     }
@@ -39,12 +38,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto save(ItemDto itemDto, Integer userId) {
-        if(userId == null){
+        if(userId == null) {
             throw new IncorrectParameterException("Id не задан!");
         }
         valid(itemDto);
         Optional<User> owner = Optional.ofNullable(userStorage.getUserById(userId));
-        if(owner.isPresent()){
+        if(owner.isPresent()) {
             Item item = ItemMapper.toItem(itemDto);
             item.setOwner(owner.get());
             return ItemMapper.toItemDto(itemStorage.create(item));
@@ -55,7 +54,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto update(ItemDto itemDto, Integer id, Integer userId) {
-        if(userId == null){
+        if(userId == null) {
             throw new IncorrectParameterException("Id пользователя не задан!");
         }
 
@@ -86,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAll(Integer id) {
         Optional<User> owner = Optional.ofNullable(userStorage.getUserById(id));
-        if(owner.isPresent()){
+        if(owner.isPresent()) {
             return itemStorage.getAll(owner.get()).stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
         } else {
             throw new ObjectNotFoundException("Пользователь с id" + id + "не найден");
@@ -102,8 +101,8 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
-    private void valid(ItemDto itemDto){
-        if(itemDto.getAvailable() == null || itemDto.getName() == null || itemDto.getDescription()==null){
+    private void valid(ItemDto itemDto) {
+        if(itemDto.getAvailable() == null || itemDto.getName() == null || itemDto.getDescription()==null) {
             throw new IncorrectParameterException("Некорректно заданы поля в запросе");
         } else if(itemDto.getName().isEmpty() || itemDto.getDescription().isEmpty()) {
             throw new IncorrectParameterException("Некорректно заданы поля в запросе");
