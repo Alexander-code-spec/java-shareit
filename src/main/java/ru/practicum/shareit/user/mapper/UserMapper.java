@@ -11,7 +11,7 @@ public class UserMapper {
                 .email(user.getEmail()).build();
     }
 
-    public static User toUser(UserDto userDto){
+    public static User toUser(UserDto userDto) {
         return User.builder()
                 .id(userDto.getId())
                 .name(userDto.getName())

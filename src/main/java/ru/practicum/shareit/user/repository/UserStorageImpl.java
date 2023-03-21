@@ -32,13 +32,15 @@ public class UserStorageImpl implements UserStorage {
 
     @Override
     public User update(UserDto userDto, Integer id) {
-        if(!users.containsKey(id)){
+        if (!users.containsKey(id)) {
             throw new ObjectNotFoundException("Пользователь с id " + id + " не найден");
         }
         User user = users.get(id);
-        if (userDto.getName() != null) user.setName(userDto.getName());
-        if (userDto.getEmail() != null){
-            if(checkPatchEmail(userDto.getEmail(), id).isEmpty()){
+        if (userDto.getName() != null) {
+            user.setName(userDto.getName());
+        }
+        if (userDto.getEmail() != null) {
+            if (checkPatchEmail(userDto.getEmail(), id).isEmpty()) {
                 user.setEmail(userDto.getEmail());
             } else {
                 throw new ParameterException("Пользователь с таким email уже существует");
@@ -49,9 +51,9 @@ public class UserStorageImpl implements UserStorage {
 
     @Override
     public void delete(Integer id) {
-        if(id == null){
+        if (id == null) {
             throw new IncorrectParameterException("Не задан id!");
-        } else if(!users.containsKey(id)){
+        } else if (!users.containsKey(id)) {
             throw new ObjectNotFoundException("Пользователь с id " + id + " не найден");
         }
         users.remove(id);
@@ -65,7 +67,7 @@ public class UserStorageImpl implements UserStorage {
     public void valid(User user, Boolean patchFlag){
         Optional<User> obj = Optional.of(user);
 
-        if(!obj.isPresent()){
+        if (!obj.isPresent()) {
             throw new IncorrectParameterException("При создании пользователя передан некорреткный параметр");
         }  else if (obj.get().getEmail() == null) {
             throw new IncorrectParameterException("Email не может быть пустым");
@@ -97,8 +99,8 @@ public class UserStorageImpl implements UserStorage {
     }
 
     public boolean checkEmail(String email){
-        for(User user: users.values()){
-            if (user.getEmail().equals(email)){
+        for (User user: users.values()) {
+            if (user.getEmail().equals(email)) {
                 return true;
             }
         }
