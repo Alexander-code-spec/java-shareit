@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class ItemStorageImpl implements ItemStorage {
-    private Map<Integer, Item> items = new HashMap<>();
-    private Integer itemsId = 0;
+    private Map<Long, Item> items = new HashMap<>();
+    private Long itemsId = 0L;
 
     @Override
-    public Item getItemById(Integer id) {
+    public Item
+    getItemById(Long id) {
         if (id == null) {
             throw new IncorrectParameterException("Не задан id!");
         } else if (!items.containsKey(id)) {

@@ -13,11 +13,11 @@ import java.util.*;
 @Component
 @Slf4j
 public class UserStorageImpl implements UserStorage {
-    private Map<Integer, User> users = new HashMap<>();
-    private Integer usersId = 0;
+    private Map<Long, User> users = new HashMap<>();
+    private Long usersId = 0L;
 
     @Override
-    public User getUserById(Integer id) {
+    public User getUserById(Long id) {
         return users.get(id);
     }
 
@@ -31,7 +31,7 @@ public class UserStorageImpl implements UserStorage {
     }
 
     @Override
-    public User update(UserDto userDto, Integer id) {
+    public User update(UserDto userDto, Long id) {
         if (!users.containsKey(id)) {
             throw new ObjectNotFoundException("Пользователь с id " + id + " не найден");
         }
@@ -50,7 +50,7 @@ public class UserStorageImpl implements UserStorage {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         if (id == null) {
             throw new IncorrectParameterException("Не задан id!");
         } else if (!users.containsKey(id)) {
@@ -92,7 +92,7 @@ public class UserStorageImpl implements UserStorage {
         return m.matches();
     }
 
-    public Optional<User> checkPatchEmail(String email, Integer id) {
+    public Optional<User> checkPatchEmail(String email, Long id) {
         return users.values().stream()
                 .filter(user -> Objects.equals(user.getEmail(), email) && !Objects.equals(user.getId(), id))
                 .findAny();

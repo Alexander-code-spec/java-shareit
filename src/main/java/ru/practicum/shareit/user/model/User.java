@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class User {
-    int id;
+    Long id;
     String name;
     String email;
 }

@@ -10,7 +10,7 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.isAvailable())
-                .request(item.getRequest() != null ? item.getRequest().getId() : null).build();
+                .build();
     }
 
     public static Item toItem(ItemDto itemDto) {

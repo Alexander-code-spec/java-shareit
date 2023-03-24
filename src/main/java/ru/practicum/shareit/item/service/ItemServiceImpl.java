@@ -32,12 +32,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto get(Integer id) {
+    public ItemDto get(Long id) {
         return ItemMapper.toItemDto(itemStorage.getItemById(id));
     }
 
     @Override
-    public ItemDto save(ItemDto itemDto, Integer userId) {
+    public ItemDto save(ItemDto itemDto, Long userId) {
         if (userId == null) {
             throw new IncorrectParameterException("Id не задан!");
         }
@@ -53,14 +53,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto update(ItemDto itemDto, Integer id, Integer userId) {
+    public ItemDto update(ItemDto itemDto, Long id, Long userId) {
         if (userId == null) {
             throw new IncorrectParameterException("Id пользователя не задан!");
         }
 
         Item item = itemStorage.getItemById(id);
 
-        if (!Integer.valueOf(item.getOwner().getId()).equals(userId)) {
+        if (!item.getOwner().getId().equals(userId)) {
             throw new ObjectNotFoundException("Пользователь с id=" + userId + " не является владельцем вещи с id=" + id);
         }
 
@@ -83,7 +83,7 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public List<ItemDto> getAll(Integer id) {
+    public List<ItemDto> getAll(Long id) {
         Optional<User> owner = Optional.ofNullable(userStorage.getUserById(id));
         if (owner.isPresent()) {
             return itemStorage.getAll(owner.get()).stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
@@ -102,8 +102,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void valid(ItemDto itemDto) {
-        if (itemDto.getAvailable() == null || itemDto.getName() == null || itemDto.getDescription() == null) {
-            throw new IncorrectParameterException("Некорректно заданы поля в запросе");
+        if (itemDto.getAvailable() == null) {
+            throw new IncorrectParameterException("Не определена доступность инструмента");
+        } else if (itemDto.getName() == null) {
+            throw new IncorrectParameterException("Не задано название инструмента");
+        } else if (itemDto.getDescription() == null) {
+            throw new IncorrectParameterException("Не задано описание иснтрумента");
         } else if (itemDto.getName().isEmpty() || itemDto.getDescription().isEmpty()) {
             throw new IncorrectParameterException("Некорректно заданы поля в запросе");
         }

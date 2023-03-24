@@ -6,9 +6,9 @@ import ru.practicum.shareit.user.model.User;
 import java.util.List;
 
 public interface ItemStorage {
-    Item getItemById(Integer id);
+    Item getItemById(Long id);
 
-    Item create(Item user);
+    Item create(Item item);
 
     List<Item> getAll(User owner);
 
