@@ -11,8 +11,6 @@ import ru.practicum.shareit.errors.exception.IncorrectParameterException;
 import ru.practicum.shareit.errors.exception.ObjectNotFoundException;
 import ru.practicum.shareit.errors.exception.ParameterException;
 import ru.practicum.shareit.errors.model.ErrorResponse;
-
-import java.net.http.HttpHeaders;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
