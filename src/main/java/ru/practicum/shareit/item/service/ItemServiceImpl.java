@@ -18,7 +18,6 @@ import ru.practicum.shareit.item.repository.CommentStorage;
 import ru.practicum.shareit.item.repository.ItemStorage;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserStorage;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.transaction.Transactional;
