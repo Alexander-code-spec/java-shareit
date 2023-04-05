@@ -20,7 +20,6 @@ import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
