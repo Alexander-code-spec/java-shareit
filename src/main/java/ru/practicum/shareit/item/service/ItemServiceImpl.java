@@ -33,6 +33,7 @@ import static ru.practicum.shareit.Enums.States.PAST;
 
 @Slf4j
 @Service
+@Transactional
 public class ItemServiceImpl implements ItemService {
     private final ItemStorage itemStorage;
     private final UserService userService;
