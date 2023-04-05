@@ -165,7 +165,7 @@ public class BookingServiceImpl implements BookingService {
                     .map(BookingMapper::mapToBookingAllFieldsDto)
                     .collect(toList());
         }
-        throw new ValidationException("Unknown state: " + state);
+        throw new IncorrectParameterException("Unknown state: " + state);
     }
 
     @Override
