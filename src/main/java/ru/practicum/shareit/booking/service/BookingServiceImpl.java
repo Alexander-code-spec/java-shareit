@@ -72,7 +72,7 @@ public class BookingServiceImpl implements BookingService {
             throw new ObjectNotFoundException("There is no available approve for the user with id#" + userId);
         if (!booking.getItem().getOwner().getId().equals(userId)
                 || !booking.getStatus().equals(WAITING))
-            throw new ValidationException("Booking state cannot be updated");
+            throw new IncorrectParameterException("Booking state cannot be updated");
         booking.setStatus(approved ? APPROVED : REJECTED);
         Booking savedBooking = bookingStorage.save(booking);
         return BookingMapper.mapToBookingAllFieldsDto(savedBooking);
