@@ -33,7 +33,7 @@ import static ru.practicum.shareit.Enums.Status.*;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
     private final UserService userService;
     private final BookingStorage bookingStorage;
 
@@ -184,7 +184,7 @@ public class BookingServiceImpl implements BookingService{
             throw new IncorrectParameterException("Не задана дата начала бронирования");
         if (bookingSavingDto.getEnd() == null)
             throw new IncorrectParameterException("Не задана дата окончания бронирования");
-        if(bookingSavingDto.getStart().equals(bookingSavingDto.getEnd()))
+        if (bookingSavingDto.getStart().equals(bookingSavingDto.getEnd()))
             throw new IncorrectParameterException("Не задана дата начала бронирования");
         if (bookingSavingDto.getStart().toLocalDate().isBefore(LocalDate.now()))
             throw new IncorrectParameterException("Некорректная дата начала броинрования");
