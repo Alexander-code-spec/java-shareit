@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingAllDto;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.errors.exception.IncorrectParameterException;
 import ru.practicum.shareit.errors.exception.ObjectNotFoundException;
@@ -106,10 +107,16 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public List<ItemDto> getAll(Long id) {
+    public List<ItemAllDto> getAll(Long id) {
         Optional<User> owner = Optional.of(UserMapper.toUser(userService.get(id)));
         if (owner.isPresent()) {
-            return itemStorage.getAllByOwner(owner.get()).stream().map(ItemMapper::toItemDto).collect(toList());
+            Map<Long, List<CommentDto>> comments = getAllComments().stream()
+                    .collect(groupingBy(CommentDto::getItemId));
+            Map<Long, List<BookingAllDto>> bookings = bookingService.getBookingsByOwner(id, null).stream()
+                    .collect(groupingBy((BookingAllDto bookingExtendedDto) -> bookingExtendedDto.getItem().getId()));
+            return itemStorage.getAllByOwner(id).stream()
+                    .map(item -> getItemAllFieldsDto(comments, bookings, item))
+                    .collect(toList());
         } else {
             throw new ObjectNotFoundException("Пользователь с id" + id + "не найден");
         }
@@ -150,6 +157,15 @@ public class ItemServiceImpl implements ItemService {
                 .stream()
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
+    }
+
+    private ItemAllDto getItemAllFieldsDto(Map<Long, List<CommentDto>> comments,
+                                           Map<Long, List<BookingAllDto>> bookings,
+                                           Item item) {
+            return ItemMapper.toItemAllFieldsDto(item,
+                    getLastItem(bookings.get(item.getId())),
+                    getNextItem(bookings.get(item.getId())),
+                    comments.get(item.getId()));
     }
 
     private void valid(ItemDto itemDto) {

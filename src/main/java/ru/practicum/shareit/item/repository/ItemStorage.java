@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ItemStorage extends JpaRepository<Item, Long> {
 
-    List<Item> getAllByOwner(User owner);
+    List<Item> getAllByOwner(Long ownerId);
 
     @Query("select item from Item item " +
             "where item.available = TRUE " +
