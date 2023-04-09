@@ -21,7 +21,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.transaction.Transactional;
-import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -136,12 +135,12 @@ public class ItemServiceImpl implements ItemService {
                                     Long itemId,
                                     Long userId) {
         if (commentDto.getText() == null || commentDto.getText().isBlank())
-            throw new IncorrectParameterException("Comment text cannot be blank");
+            throw new IncorrectParameterException("Текст комментария не может быть пустым");
         Item item = itemStorage.findById(itemId).orElseThrow(
-                () -> new ObjectNotFoundException("Item with id#" + itemId + " does not exist"));
+                () -> new ObjectNotFoundException("Вещь с id = " + itemId + " не найдена"));
         User user = UserMapper.toUser(userService.get(userId));
         List<BookingAllDto> bookings = bookingService.getAll(userId, PAST.name());
-        if (bookings.isEmpty()) throw new IncorrectParameterException("User cannot make comments");
+        if (bookings.isEmpty()) throw new IncorrectParameterException("Нельзя оставить комментарий");
         Comment comment = CommentMapper.toComment(commentDto);
         comment.setItem(item);
         comment.setAuthor(user);
