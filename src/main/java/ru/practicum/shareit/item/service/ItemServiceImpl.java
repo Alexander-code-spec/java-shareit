@@ -113,7 +113,7 @@ public class ItemServiceImpl implements ItemService {
                     .collect(groupingBy(CommentDto::getItemId));
             Map<Long, List<BookingAllDto>> bookings = bookingService.getBookingsByOwner(id, null).stream()
                     .collect(groupingBy((BookingAllDto bookingExtendedDto) -> bookingExtendedDto.getItem().getId()));
-            return itemStorage.getAllByOwner(id).stream()
+            return itemStorage.findAllByOwner_IdIs(id).stream()
                     .map(item -> getItemAllFieldsDto(comments, bookings, item))
                     .collect(toList());
         } else {
