@@ -57,10 +57,9 @@ public class ItemServiceImpl implements ItemService {
                 () -> new ObjectNotFoundException("Item with id#" + id + " does not exist"));
         Map<Long, List<CommentDto>> comments = getAllComments().stream()
                 .collect(groupingBy(CommentDto::getItemId));
-        List<BookingAllDto> bookings = bookingService.getBookingsByItem(item.getId(), userId);
         return ItemMapper.toItemAllFieldsDto(item,
-                getLastItem(bookings),
-                getNextItem(bookings),
+                null,
+                null,
                 comments.get(item.getId()));
     }
 
