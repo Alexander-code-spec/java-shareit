@@ -56,11 +56,20 @@ public class ItemServiceImpl implements ItemService {
                 () -> new ObjectNotFoundException("Вещь с id " + id + " не найдена"));
         Map<Long, List<CommentDto>> comments = getAllComments().stream()
                 .collect(groupingBy(CommentDto::getItemId));
-        List<BookingAllDto> bookings = bookingService.getBookingsByItem(item.getId(), userId);
-        return ItemMapper.toItemAllFieldsDto(item,
-                getLastItem(bookings),
-                getNextItem(bookings),
-                comments.get(item.getId()));
+        if (item.getOwner().getId().equals(userId)) {
+            List<BookingAllDto> bookings = bookingService.getBookingsByItem(item.getId(), userId);
+            return ItemMapper.toItemAllFieldsDto(item,
+                    getLastItem(bookings),
+                    getNextItem(bookings),
+                    comments.get(item.getId()));
+        } else {
+            return ItemMapper.toItemAllFieldsDto(item,
+                    getLastItem(null),
+                    getNextItem(null),
+                    comments.get(item.getId()));
+        }
+
+
     }
 
     @Override
