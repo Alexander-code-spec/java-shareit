@@ -54,7 +54,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemAllDto get(Long id, Long userId) {
         Item item = itemStorage.findById(id).orElseThrow(
-                () -> new ObjectNotFoundException("Item with id#" + id + " does not exist"));
+                () -> new ObjectNotFoundException("Вещь с id " + id + " не найдена"));
         Map<Long, List<CommentDto>> comments = getAllComments().stream()
                 .collect(groupingBy(CommentDto::getItemId));
         List<BookingAllDto> bookings = bookingService.getBookingsByItem(item.getId(), userId);
@@ -136,12 +136,12 @@ public class ItemServiceImpl implements ItemService {
                                     Long itemId,
                                     Long userId) {
         if (commentDto.getText() == null || commentDto.getText().isBlank())
-            throw new ValidationException("Comment text cannot be blank");
+            throw new IncorrectParameterException("Comment text cannot be blank");
         Item item = itemStorage.findById(itemId).orElseThrow(
                 () -> new ObjectNotFoundException("Item with id#" + itemId + " does not exist"));
         User user = UserMapper.toUser(userService.get(userId));
         List<BookingAllDto> bookings = bookingService.getAll(userId, PAST.name());
-        if (bookings.isEmpty()) throw new ValidationException("User cannot make comments");
+        if (bookings.isEmpty()) throw new IncorrectParameterException("User cannot make comments");
         Comment comment = CommentMapper.toComment(commentDto);
         comment.setItem(item);
         comment.setAuthor(user);
