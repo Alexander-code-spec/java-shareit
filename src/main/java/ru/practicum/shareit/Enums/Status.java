@@ -1,7 +1,6 @@
 package ru.practicum.shareit.Enums;
 
-public enum
-Status {
+public enum Status {
     WAITING,
     APPROVED,
     REJECTED,

@@ -46,14 +46,6 @@ public class BookingServiceImpl implements BookingService {
         valid(bookingControllerDto);
         User booker = UserMapper.toUser(userService.get(id));
         Item item = ItemMapper.toItem(itemDto);
-        List<Booking> bookings = bookingStorage
-                .findBookingsByItem_IdIsAndStatusIsAndEndIsAfter(
-                        item.getId(),
-                        APPROVED,
-                        bookingControllerDto.getStart()
-                );
-        if (!bookings.isEmpty())
-            throw new ObjectNotFoundException("Данная вещь не может быть арендована: " + item.getName());
         Booking booking = BookingMapper.toBooking(bookingControllerDto);
         booking.setStatus(WAITING);
         booking.setBooker(booker);
