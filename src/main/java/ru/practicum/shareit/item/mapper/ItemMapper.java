@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.mapper;
 
+import ru.practicum.shareit.Enums.Status;
 import ru.practicum.shareit.booking.dto.BookingAllDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -47,8 +48,8 @@ public class ItemMapper {
                 .available(item.getAvailable())
                 .ownerId(item.getOwner() != null ? item.getOwner().getId() : null)
                 .requestId(item.getRequest() != null ? item.getRequest().getId() : null)
-                .lastBooking(lastBooking != null ? new BookingDto(lastBooking.getId(), lastBooking.getBooker().getId()) : null)
-                .nextBooking(nextBooking != null ? new BookingDto(nextBooking.getId(), nextBooking.getBooker().getId()) : null)
+                .lastBooking((lastBooking != null && !lastBooking.getStatus().equals("REJECTED")) ? new BookingDto(lastBooking.getId(), lastBooking.getBooker().getId()) : null)
+                .nextBooking(nextBooking != null  && !nextBooking.getStatus().equals("REJECTED")? new BookingDto(nextBooking.getId(), nextBooking.getBooker().getId()) : null)
                 .comments(comments != null ? comments : List.of())
                 .build();
     }

@@ -56,20 +56,11 @@ public class ItemServiceImpl implements ItemService {
                 () -> new ObjectNotFoundException("Вещь с id " + id + " не найдена"));
         Map<Long, List<CommentDto>> comments = getAllComments().stream()
                 .collect(groupingBy(CommentDto::getItemId));
-        if (item.getOwner().getId().equals(userId)) {
-            List<BookingAllDto> bookings = bookingService.getBookingsByItem(item.getId(), userId);
-            return ItemMapper.toItemAllFieldsDto(item,
-                    getLastItem(bookings),
-                    getNextItem(bookings),
-                    comments.get(item.getId()));
-        } else {
-            return ItemMapper.toItemAllFieldsDto(item,
-                    getLastItem(null),
-                    getNextItem(null),
-                    comments.get(item.getId()));
-        }
-
-
+        List<BookingAllDto> bookings = bookingService.getBookingsByItem(item.getId(), userId);
+        return ItemMapper.toItemAllFieldsDto(item,
+               getLastItem(bookings),
+               getNextItem(bookings),
+               comments.get(item.getId()));
     }
 
     @Override
@@ -198,7 +189,7 @@ public class ItemServiceImpl implements ItemService {
     private BookingAllDto getLastItem(List<BookingAllDto> bookings) {
         return bookings != null
                 ? bookings.stream()
-                .filter(booking -> booking.getEnd().isBefore(LocalDateTime.now()))
+                .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
                 .max(Comparator.comparing(BookingAllDto::getEnd)).orElse(null)
                 : null;
     }
