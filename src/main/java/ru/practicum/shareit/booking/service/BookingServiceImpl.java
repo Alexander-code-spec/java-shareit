@@ -58,12 +58,12 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingAllDto approve(Long bookingId, boolean approved, Long userId) {
         Booking booking = bookingStorage.findById(bookingId).orElseThrow(
-                () -> new ObjectNotFoundException("Booking with id#" + bookingId + " does not exist"));
+                () -> new ObjectNotFoundException("Такого бронирования не существует"));
         if (booking.getBooker().getId().equals(userId))
-            throw new ObjectNotFoundException("There is no available approve for the user with id#" + userId);
+            throw new ObjectNotFoundException("Пользователь с id = " + userId + " не может одобрить заявку");
         if (!booking.getItem().getOwner().getId().equals(userId)
                 || !booking.getStatus().equals(WAITING))
-            throw new IncorrectParameterException("Booking state cannot be updated");
+            throw new IncorrectParameterException("Бронирование не может быть обновлено");
         booking.setStatus(approved ? APPROVED : REJECTED);
         Booking savedBooking = bookingStorage.save(booking);
         return BookingMapper.mapToBookingAllFieldsDto(savedBooking);
@@ -162,10 +162,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingAllDto get(Long bookingId, Long userId) {
         var booking = bookingStorage.findById(bookingId).orElseThrow(
-                () -> new ObjectNotFoundException("Booking with id#" + bookingId + " does not exist"));
+                () -> new ObjectNotFoundException("Такого бронирования не существует"));
         if (!booking.getBooker().getId().equals(userId)
                 && !booking.getItem().getOwner().getId().equals(userId)) {
-            throw new ObjectNotFoundException("There is no available approve for the user with id#" + userId);
+            throw new ObjectNotFoundException("Данный пользователь не может получить информацию о бронировании");
         }
         return BookingMapper.mapToBookingAllFieldsDto(booking);
     }
