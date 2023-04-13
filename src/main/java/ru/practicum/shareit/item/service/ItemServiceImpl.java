@@ -54,13 +54,14 @@ public class ItemServiceImpl implements ItemService {
     public ItemAllDto get(Long id, Long userId) {
         Item item = itemStorage.findById(id).orElseThrow(
                 () -> new ObjectNotFoundException("Вещь с id " + id + " не найдена"));
-        Map<Long, List<CommentDto>> comments = getAllComments().stream()
-                .collect(groupingBy(CommentDto::getItemId));
+        List<CommentDto> comments = getAllComments().stream()
+                .filter(commentDto -> commentDto.getItemId().equals(id))
+                .collect(toList());
         List<BookingAllDto> bookings = bookingService.getBookingsByItem(item.getId(), userId);
         return ItemMapper.toItemAllFieldsDto(item,
                getLastItem(bookings),
                getNextItem(bookings),
-               comments.get(item.getId()));
+               comments);
     }
 
     @Override
@@ -106,19 +107,21 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemAllDto> getAll(Long id) {
-        Optional<User> owner = Optional.of(UserMapper.toUser(userService.get(id)));
-        if (owner.isPresent()) {
+        User owner = UserMapper.toUser(userService.get(id));
+        if (owner != null) {
+            List<Item> allItems = itemStorage.findAllByOwner_IdIs(id);
             Map<Long, List<CommentDto>> comments = getAllComments().stream()
+                    .filter(commentDto -> allItems.contains(commentDto.getItemId()))
                     .collect(groupingBy(CommentDto::getItemId));
             Map<Long, List<BookingAllDto>> bookings = bookingService.getBookingsByOwner(id, null).stream()
                     .collect(groupingBy((BookingAllDto bookingExtendedDto) -> bookingExtendedDto.getItem().getId()));
-            return itemStorage.findAllByOwner_IdIs(id).stream()
+            return  allItems.stream()
                     .map(item -> getItemAllFieldsDto(comments, bookings, item))
                     .collect(toList());
         } else {
+
             throw new ObjectNotFoundException("Пользователь с id" + id + "не найден");
         }
-
     }
 
     @Override
@@ -181,7 +184,7 @@ public class ItemServiceImpl implements ItemService {
     private BookingAllDto getNextItem(List<BookingAllDto> bookings) {
         return bookings != null
                 ? bookings.stream()
-                .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
+                .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()) && !Objects.equals(booking.getStatus().toString(), "REJECTED"))
                 .min(Comparator.comparing(BookingAllDto::getEnd)).orElse(null)
                 : null;
     }

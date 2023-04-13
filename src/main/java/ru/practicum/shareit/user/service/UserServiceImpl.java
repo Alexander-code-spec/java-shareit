@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
            return UserMapper.toUserDto(userStorage.save(user));
        } catch (DataIntegrityViolationException ex) {
            if (ex.getCause() instanceof ConstraintViolationException) {
-               throw new ParameterException("Пользователь с таким email уже существует");
+               throw new ParameterException(ex.getMessage());
            }
        }
        return null;
@@ -87,13 +87,11 @@ public class UserServiceImpl implements UserService {
 
 
     public void valid(UserDto user) {
-        Optional<UserDto> obj = Optional.of(user);
-
-        if (!obj.isPresent()) {
+        if (user == null) {
             throw new IncorrectParameterException("При создании пользователя передан некорреткный параметр");
-        }  else if (obj.get().getEmail() == null) {
+        }  else if (user.getEmail() == null) {
             throw new IncorrectParameterException("Email не может быть пустым");
-        } else if (!isValidEmailAddress(obj.get().getEmail())) {
+        } else if (!isValidEmailAddress(user.getEmail())) {
             throw new IncorrectParameterException("Неверно задан email");
         }
     }
