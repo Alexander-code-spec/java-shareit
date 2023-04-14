@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingAllDto;
 import ru.practicum.shareit.booking.service.BookingService;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
 import static ru.practicum.shareit.Enums.States.PAST;
 
 
@@ -54,14 +56,12 @@ public class ItemServiceImpl implements ItemService {
     public ItemAllDto get(Long id, Long userId) {
         Item item = itemStorage.findById(id).orElseThrow(
                 () -> new ObjectNotFoundException("Вещь с id " + id + " не найдена"));
-        List<CommentDto> comments = getAllComments().stream()
-                .filter(commentDto -> commentDto.getItemId().equals(id))
-                .collect(toList());
+        List<Comment> comments = commentStorage.findByItem(item, Sort.by(DESC, "created"));
         List<BookingAllDto> bookings = bookingService.getBookingsByItem(item.getId(), userId);
         return ItemMapper.toItemAllFieldsDto(item,
                getLastItem(bookings),
                getNextItem(bookings),
-               comments);
+               comments.stream().map(CommentMapper::toCommentDto).collect(toList()));
     }
 
     @Override
@@ -110,9 +110,7 @@ public class ItemServiceImpl implements ItemService {
         User owner = UserMapper.toUser(userService.get(id));
         if (owner != null) {
             List<Item> allItems = itemStorage.findAllByOwner_IdIs(id);
-            Map<Long, List<CommentDto>> comments = getAllComments().stream()
-                    .filter(commentDto -> allItems.contains(commentDto.getItemId()))
-                    .collect(groupingBy(CommentDto::getItemId));
+            List<Comment> comments = commentStorage.findByItemIn(allItems, Sort.by(DESC, "created"));
             Map<Long, List<BookingAllDto>> bookings = bookingService.getBookingsByOwner(id, null).stream()
                     .collect(groupingBy((BookingAllDto bookingExtendedDto) -> bookingExtendedDto.getItem().getId()));
             return  allItems.stream()
@@ -160,13 +158,13 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
-    private ItemAllDto getItemAllFieldsDto(Map<Long, List<CommentDto>> comments,
+    private ItemAllDto getItemAllFieldsDto(List<Comment> comments,
                                            Map<Long, List<BookingAllDto>> bookings,
                                            Item item) {
             return ItemMapper.toItemAllFieldsDto(item,
                     getLastItem(bookings.get(item.getId())),
                     getNextItem(bookings.get(item.getId())),
-                    comments.get(item.getId()));
+                    comments.stream().map(CommentMapper::toCommentDto).collect(toList()));
     }
 
     private void valid(ItemDto itemDto) {
