@@ -26,7 +26,7 @@ import static ru.practicum.shareit.util.Pagination.makePageRequest;
 @Slf4j
 @Service
 @Transactional
-public class ItemRequestServiceImpl implements ItemRequestService{
+public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestStorage itemRequestStorage;
     private final UserService userService;
     private final ItemService itemService;
