@@ -274,7 +274,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingAllDto get(Long bookingId, Long userId) {
-        var booking = bookingStorage.findById(bookingId).orElseThrow(
+        Booking booking = bookingStorage.findById(bookingId).orElseThrow(
                 () -> new ObjectNotFoundException("Такого бронирования не существует"));
         if (!booking.getBooker().getId().equals(userId)
                 && !booking.getItem().getOwner().getId().equals(userId)) {
