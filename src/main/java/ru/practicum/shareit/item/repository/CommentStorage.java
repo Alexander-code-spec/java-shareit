@@ -13,6 +13,4 @@ public interface CommentStorage extends JpaRepository<Comment, Long> {
     List<Comment> findByItem(Item item, Sort sort);
 
     List<Comment> findByItemIn(Collection<Item> items, Sort sort);
-
-    List<Comment> findCommentByItem_IdIsOrderByCreated(Long itemId);
 }
