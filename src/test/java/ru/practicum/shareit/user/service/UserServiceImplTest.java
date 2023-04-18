@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.practicum.shareit.errors.exception.IncorrectParameterException;
+import org.springframework.dao.DataIntegrityViolationException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
@@ -45,9 +45,10 @@ class UserServiceImplTest {
     @Test
     void emailExceptionTest() {
         userService.save(saveUserDto("Jack", "jack@mail.com"));
-        Exception exception = assertThrows(IncorrectParameterException.class,
+        Exception exception = assertThrows(DataIntegrityViolationException.class,
                 () -> userService.save(saveUserDto("Jack", "jack@mail.com")));
-        assertEquals("User with email: " + userDto.getEmail() + " is already exist.", exception.getMessage());
+        assertEquals("could not execute statement; SQL [n/a]; constraint [null]; nested exception " +
+                "is org.hibernate.exception.ConstraintViolationException: could not execute statement", exception.getMessage());
     }
 
     @Test

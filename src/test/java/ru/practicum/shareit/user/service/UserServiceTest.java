@@ -165,9 +165,9 @@ class UserServiceTest {
 
     @Test
     void getUserNullTest() {
-        Exception exception = assertThrows(ObjectNotFoundException.class,
+        Exception exception = assertThrows(IncorrectParameterException.class,
                 () -> userService.get(null));
-        assertEquals("Пользователь с id = " + null + " не найден", exception.getMessage());
+        assertEquals("Id пользователя не может быть null", exception.getMessage());
     }
 
     @Test
