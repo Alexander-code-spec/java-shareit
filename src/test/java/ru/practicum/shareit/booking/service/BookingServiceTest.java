@@ -206,6 +206,25 @@ class BookingServiceTest {
     }
 
     @Test
+    void saveBookingTakenItemTest() {
+        when(userService.get(anyLong()))
+                .thenReturn(userDto);
+        when(bookingStorage.findBookingsByItem_IdIsAndStatusIsAndEndIsAfter(anyLong(), any(), any()))
+                .thenReturn(of(booking));
+        Exception exception = assertThrows(ObjectNotFoundException.class,
+                () -> bookingService.save(
+                        bookingControllerDto,
+                        ItemMapper.toItemAllFieldsDto(
+                                booking.getItem(),
+                                null,
+                                null,
+                                of()),
+                        2L)
+        );
+        assertEquals("This item cannot be booked: " + booking.getItem().getName(), exception.getMessage());
+    }
+
+    @Test
     void approveBookingNotItemOwnerTest() {
         when(bookingStorage.findById(anyLong()))
                 .thenReturn(ofNullable(booking));

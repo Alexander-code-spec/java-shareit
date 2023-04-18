@@ -64,11 +64,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto get(Long id) {
-        Optional<User> user = userStorage.findById(id);
-        if (user.isEmpty()) {
-            throw new ObjectNotFoundException("Пользователь с id = " + id + " не найден");
+        if (id == null) {
+            throw new IncorrectParameterException("Id пользователя не может быть null");
         }
-        return UserMapper.toUserDto(user.get());
+        User user = userStorage.findById(id).orElseThrow(() -> {
+            throw new ObjectNotFoundException("Пользователь с id = " + id + " не найден");
+        });
+
+        return UserMapper.toUserDto(user);
     }
 
     @Override
