@@ -21,7 +21,7 @@ import static java.util.Optional.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceUnitTest {
+class UserServiceTest {
     @Mock
     private UserStorage userRepository;
     private UserService userService;
