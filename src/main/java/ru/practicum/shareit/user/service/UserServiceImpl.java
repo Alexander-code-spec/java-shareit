@@ -13,10 +13,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserStorage;
-
 import java.util.List;
-import java.util.Optional;
-
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
