@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.json.JsonContent;
-import ru.practicum.shareit.item.dto.ItemDto;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static java.time.LocalDateTime.*;
 import static java.util.List.*;

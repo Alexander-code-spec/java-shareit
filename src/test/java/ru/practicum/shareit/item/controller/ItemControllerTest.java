@@ -13,7 +13,6 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemAllDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.request.repository.ItemRequestStorage;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
 import static org.hamcrest.Matchers.hasSize;
