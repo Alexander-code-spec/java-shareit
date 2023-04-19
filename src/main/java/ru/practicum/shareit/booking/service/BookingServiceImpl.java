@@ -55,8 +55,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(WAITING);
         booking.setBooker(booker);
         booking.setItem(item);
-        Booking savedBooking = bookingStorage.save(booking);
-        return BookingMapper.mapToBookingAllFieldsDto(savedBooking);
+        return BookingMapper.mapToBookingAllFieldsDto(bookingStorage.save(booking));
     }
 
     @Override

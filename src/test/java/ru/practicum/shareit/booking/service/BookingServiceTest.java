@@ -114,7 +114,7 @@ class BookingServiceTest {
 
     @Test
     void saveBookingTest() {
-        var bookingAllFieldsDto = saveBookingDto();
+        BookingAllDto bookingAllFieldsDto = saveBookingDto();
         assertEquals(bookingAllFieldsDto.getId(), booking.getId());
         assertEquals(bookingAllFieldsDto.getItem().getId(), booking.getItem().getId());
     }
@@ -187,6 +187,25 @@ class BookingServiceTest {
                         bookingControllerDto.getBooker())
         );
         assertEquals("Вещь с id = " + booking.getId() + " не можеь быть арендована", exception.getMessage());
+    }
+
+    @Test
+    void saveBookingTakenItemTest() {
+        when(userService.get(any()))
+                .thenReturn(userDto);
+        when(bookingStorage.findBookingsByItem_IdIsAndStatusIsAndEndIsAfter(anyLong(), any(), any()))
+                .thenReturn(of(booking));
+        Exception exception = assertThrows(ObjectNotFoundException.class,
+                () -> bookingService.save(
+                        bookingControllerDto,
+                        ItemMapper.toItemAllFieldsDto(
+                                booking.getItem(),
+                                null,
+                                null,
+                                of()),
+                        1L)
+        );
+        assertEquals("Вещь с id = " + booking.getItem().getId() + " не можеь быть арендована", exception.getMessage());
     }
 
     @Test
