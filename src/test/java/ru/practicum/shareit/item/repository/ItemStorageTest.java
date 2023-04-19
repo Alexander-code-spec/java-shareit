@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.*;
 
 @DataJpaTest
-class ItemRepositoryTest {
+class ItemStorageTest {
     @Autowired
     private TestEntityManager entityManager;
     @Autowired
