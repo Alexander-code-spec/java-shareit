@@ -78,8 +78,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemRequestDto != null)
             item.setRequest(ItemRequestMapper.mapToItemRequest(
                     itemRequestDto, userService.get(itemRequestDto.getRequesterId())));
-        Item save = itemStorage.save(item);
-        return ItemMapper.toItemDto(save);
+        return ItemMapper.toItemDto(itemStorage.save(item));
     }
 
 
@@ -90,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
             throw new IncorrectParameterException("Id пользователя не задан!");
         }
 
-        Item item = itemStorage.getReferenceById(id);
+        Item item = itemStorage.findById(id).get();
 
         if (!item.getOwner().getId().equals(userId)) {
             throw new ObjectNotFoundException("Пользователь с id=" + userId + " не является владельцем вещи с id=" + id);
@@ -110,7 +109,7 @@ public class ItemServiceImpl implements ItemService {
         if (Objects.nonNull(patchAvailable)) {
             item.setAvailable(patchAvailable);
         }
-        return ItemMapper.toItemDto(item);
+        return ItemMapper.toItemDto(itemStorage.save(item));
     }
 
 

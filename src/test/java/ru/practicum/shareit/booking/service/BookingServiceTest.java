@@ -263,7 +263,7 @@ class BookingServiceTest {
     void approveBookingByBookerTest() {
         when(bookingStorage.findById(anyLong()))
                 .thenReturn(ofNullable(booking));
-        var exception = assertThrows(ObjectNotFoundException.class,
+        Exception exception = assertThrows(ObjectNotFoundException.class,
                 () -> bookingService.approve(
                         booking.getId(),
                         true,

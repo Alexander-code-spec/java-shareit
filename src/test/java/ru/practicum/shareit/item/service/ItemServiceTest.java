@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -77,7 +78,27 @@ class ItemServiceTest {
     void saveTest() {
         ItemDto saved = saveItemDto();
         assertEquals(saved.getName(), item.getName());
-        assertEquals(1, item.getId());
+        assertEquals(saved.getId(), item.getId());
+    }
+
+    @Test
+    void updateTest() {
+        ItemDto dto = saveItemDto();
+        Item updated = new Item(
+                dto.getId(),
+                "Anthony",
+                itemDto.getDescription(),
+                itemDto.getAvailable(),
+                toUser(userDto),
+                null
+        );
+        when(itemRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(item));
+        when(itemRepository.save(any()))
+                .thenReturn(updated);
+        ItemDto update = itemService.update(ItemMapper.toItemDto(updated), userDto.getId(), 1L);
+        assertNotEquals(dto.getName(), update.getName());
+        assertEquals(1L, update.getId());
     }
 
     @Test

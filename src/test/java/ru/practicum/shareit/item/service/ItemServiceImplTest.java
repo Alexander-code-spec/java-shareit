@@ -252,13 +252,13 @@ class ItemServiceImplTest {
 
     @Test
     void getItemsByRequestIdTest() {
-        var requester = userService.save(
+        UserDto requester = userService.save(
                 new UserDto(
                         null,
                         "Abby",
                         "abby@mail.com")
         );
-        var itemRequestDto = itemRequestService.save(
+        ItemRequestDto itemRequestDto = itemRequestService.save(
                 new ItemRequestDto(
                         null,
                         "I need it",
