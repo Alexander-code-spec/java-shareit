@@ -240,6 +240,38 @@ class ItemServiceTest {
     }
 
     @Test
+    void saveItemNullDescriptionTest() {
+        Exception exception = assertThrows(IncorrectParameterException.class,
+                () -> itemService.save(
+                        new ItemDto(
+                                null,
+                                "space",
+                                null,
+                                true,
+                                1L),
+                        null,
+                        1L)
+        );
+        assertEquals("Не задано описание иснтрумента", exception.getMessage());
+    }
+
+    @Test
+    void saveItemNullNameTest() {
+        Exception exception = assertThrows(IncorrectParameterException.class,
+                () -> itemService.save(
+                        new ItemDto(
+                                null,
+                                null,
+                                "",
+                                true,
+                                1L),
+                        null,
+                        1L)
+        );
+        assertEquals("Не задано название инструмента", exception.getMessage());
+    }
+
+    @Test
     void saveItemEmptyDescriptionTest() {
         Exception exception = assertThrows(IncorrectParameterException.class,
                 () -> itemService.save(

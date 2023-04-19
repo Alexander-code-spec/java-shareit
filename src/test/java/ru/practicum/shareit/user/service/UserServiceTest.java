@@ -79,6 +79,23 @@ class UserServiceTest {
     }
 
     @Test
+    void saveNullUserEmptyTest() {
+        Exception exception = assertThrows(IncorrectParameterException.class,
+                () -> userService.save(null)
+        );
+        assertEquals("При создании пользователя передан некорреткный параметр", exception.getMessage());
+    }
+
+    @Test
+    void saveNullEmailTest() {
+        Exception exception = assertThrows(IncorrectParameterException.class,
+                () -> userService.save(new UserDto(
+                        null, "Abbie", null))
+        );
+        assertEquals("Email не может быть пустым", exception.getMessage());
+    }
+
+    @Test
     void updateUserNameTest() {
         UserDto userDto1 = new UserDto(1L, "Daniel", null);
         UserDto userDto2 = new UserDto(1L, "Daniel", userDto.getEmail());
