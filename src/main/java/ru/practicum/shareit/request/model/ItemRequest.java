@@ -31,17 +31,4 @@ public class ItemRequest {
 
     @Column(name = "created", nullable = false)
     private LocalDateTime created;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItemRequest that = (ItemRequest) o;
-        return id != null && Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }
