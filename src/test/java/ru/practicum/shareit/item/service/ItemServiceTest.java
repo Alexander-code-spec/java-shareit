@@ -6,8 +6,6 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.repository.CommentStorage;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.repository.ItemStorage;
-import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.user.service.UserService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
