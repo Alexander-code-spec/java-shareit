@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.boot.test.json.JsonContent;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -19,7 +20,7 @@ class UserDtoTest {
                 "Maggie",
                 "maggie@mail.com");
 
-        var jsonContent = json.write(userDto);
+        JsonContent<UserDto> jsonContent = json.write(userDto);
         assertThat(jsonContent).extractingJsonPathStringValue("$.email")
                 .isEqualTo(userDto.getEmail());
         assertThat(jsonContent).extractingJsonPathStringValue("$.name")

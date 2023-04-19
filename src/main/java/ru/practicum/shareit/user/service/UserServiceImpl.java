@@ -74,6 +74,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(Long id) {
+        if (id == null) {
+            throw new IncorrectParameterException("Id не может быть пустым!");
+        }
         userStorage.deleteById(id);
     }
 

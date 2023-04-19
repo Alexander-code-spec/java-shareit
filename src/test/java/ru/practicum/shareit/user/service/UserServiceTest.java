@@ -171,6 +171,13 @@ class UserServiceTest {
     }
 
     @Test
+    void deleteUserNullIdTest() {
+        Exception exception = assertThrows(IncorrectParameterException.class,
+                () -> userService.delete(null));
+        assertEquals("Id не может быть пустым!", exception.getMessage());
+    }
+
+    @Test
     void getAllEmptyTest() {
         when(userRepository.findAll())
                 .thenReturn(List.of());

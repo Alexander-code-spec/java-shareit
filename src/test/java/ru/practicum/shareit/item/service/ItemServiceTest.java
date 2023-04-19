@@ -117,6 +117,13 @@ class ItemServiceTest {
     }
 
     @Test
+    void updateNullOwnerTest() {
+        Exception exception = assertThrows(IncorrectParameterException.class,
+                () -> itemService.update(itemDto, null, null));
+        assertEquals("Id пользователя не задан!", exception.getMessage());
+    }
+
+    @Test
     void getItemNotFoundTest() {
         saveItemDto();
         when(itemRepository.findById(anyLong()))
@@ -227,7 +234,7 @@ class ItemServiceTest {
         );
         when(commentRepository.findAll())
                 .thenReturn(of(comment));
-        var allComments = itemService.getAllComments();
+        List<CommentDto> allComments = itemService.getAllComments();
         assertEquals(allComments.get(0).getId(), comment.getId());
         assertEquals(allComments.size(), 1);
     }
