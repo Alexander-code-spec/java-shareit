@@ -44,7 +44,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestDto> getAllItemRequests(Integer from, Integer size, Long userId) {
         List<ItemRequest> requests;
-        if (from == null){
+        if (from == null) {
             from = 0;
         } else if (size == null) {
             size = 10;
