@@ -19,7 +19,10 @@ import ru.practicum.shareit.user.service.UserService;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
+
 import static java.time.LocalDateTime.now;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static ru.practicum.shareit.util.Pagination.makePageRequest;
 
@@ -41,6 +44,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestDto> getAllItemRequests(Integer from, Integer size, Long userId) {
         List<ItemRequest> requests;
+        if (from == null){
+            from = 0;
+        } else if (size == null) {
+            size = 10;
+        }
         PageRequest pageRequest = makePageRequest(from, size, Sort.by("created").descending());
         if (pageRequest == null) {
             requests = itemRequestStorage.findItemRequestByRequester_IdIsNotOrderByCreatedDesc(userId);
@@ -61,8 +69,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         User user = UserMapper.toUser(userService.get(userId));
         List<ItemRequest> itemRequests = itemRequestStorage.findItemRequestByRequesterOrderByCreatedDesc(user);
         List<ItemDto> items = itemService.getItemsByRequests(itemRequests);
+        Map<Long, List<ItemDto>> itemsByRequest = items
+                .stream()
+                .collect(groupingBy(ItemDto::getRequestId, toList()));
         return itemRequests.stream()
-                .map(itemRequest -> ItemRequestMapper.mapToItemRequestDto(itemRequest, items))
+                .map(itemRequest -> ItemRequestMapper.mapToItemRequestDto(itemRequest, itemsByRequest.get(itemRequest.getId())))
                 .collect(toList());
     }
 

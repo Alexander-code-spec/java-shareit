@@ -68,7 +68,7 @@ class BookingControllerTest {
 
     @Test
     void getAllBookingsTest() throws Exception {
-        when(bookingService.getAll(anyLong(), anyString(), anyInt(), anyInt()))
+        when(bookingService.getAll(1L, "All", 0, 1))
                 .thenReturn(List.of(bookingAllFieldsDto));
         mvc.perform(get("/bookings")
                         .header(headerSharerUserId, 1)
