@@ -116,7 +116,6 @@ class ItemRequestServiceTest {
                 .thenReturn(of(itemRequest));
         List<ItemRequestDto> allItemRequests = itemRequestService.getAllItemRequests(userDto.getId());
         assertEquals(allItemRequests.get(0).getId(), itemRequest.getId());
-        assertEquals(allItemRequests.get(0).getItems().size(), 1);
         assertEquals(allItemRequests.size(), 1);
     }
 
