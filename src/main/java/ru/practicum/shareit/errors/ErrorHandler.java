@@ -30,7 +30,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIncorrectParameterException(final IncorrectParameterException e) {
         return new ErrorResponse(
-                String.format(e.getMessage())
+                e.getMessage()
         );
     }
 

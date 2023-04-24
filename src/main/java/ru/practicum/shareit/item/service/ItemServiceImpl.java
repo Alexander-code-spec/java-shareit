@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingAllDto;
@@ -17,6 +18,9 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentStorage;
 import ru.practicum.shareit.item.repository.ItemStorage;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.mapper.ItemRequestMapper;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -25,11 +29,11 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import static java.util.stream.Collectors.*;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static ru.practicum.shareit.Enums.States.PAST;
+import static ru.practicum.shareit.util.Pagination.makePageRequest;
 
 
 @Slf4j
@@ -66,13 +70,17 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto save(ItemDto itemDto, Long userId) {
+    public ItemDto save(ItemDto itemDto, ItemRequestDto itemRequestDto, Long userId) {
         valid(itemDto);
         User owner = UserMapper.toUser(userService.get(userId));
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner(owner);
+        if (itemRequestDto != null)
+            item.setRequest(ItemRequestMapper.mapToItemRequest(
+                    itemRequestDto, userService.get(itemRequestDto.getRequesterId())));
         return ItemMapper.toItemDto(itemStorage.save(item));
     }
+
 
     @Override
     @Transactional
@@ -81,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
             throw new IncorrectParameterException("Id пользователя не задан!");
         }
 
-        Item item = itemStorage.getReferenceById(id);
+        Item item = itemStorage.findById(id).get();
 
         if (!item.getOwner().getId().equals(userId)) {
             throw new ObjectNotFoundException("Пользователь с id=" + userId + " не является владельцем вещи с id=" + id);
@@ -101,18 +109,25 @@ public class ItemServiceImpl implements ItemService {
         if (Objects.nonNull(patchAvailable)) {
             item.setAvailable(patchAvailable);
         }
-        return ItemMapper.toItemDto(item);
+        return ItemMapper.toItemDto(itemStorage.save(item));
     }
 
 
     @Override
-    public List<ItemAllDto> getAll(Long id) {
+    public List<ItemAllDto> getAll(Long id, Integer from, Integer size) {
+        List<Item> allItems;
         User owner = UserMapper.toUser(userService.get(id));
         if (owner != null) {
-            List<Item> allItems = itemStorage.findAllByOwner_IdIs(id);
+            PageRequest pageRequest = makePageRequest(from, size, Sort.by("id").ascending());
+            if (pageRequest == null) {
+                allItems = itemStorage.findAllByOwner_IdIs(id);
+            } else {
+                allItems = itemStorage.findAllByOwner_IdIs(id, pageRequest);
+            }
             List<Comment> comments = commentStorage.findByItemIn(allItems, Sort.by(DESC, "created"));
             Map<Long, List<BookingAllDto>> bookings = bookingService.getBookingsByOwner(id, null).stream()
                     .collect(groupingBy((BookingAllDto bookingExtendedDto) -> bookingExtendedDto.getItem().getId()));
+
             return  allItems.stream()
                     .map(item -> getItemAllFieldsDto(comments, bookings, item))
                     .collect(toList());
@@ -123,11 +138,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getByText(String text) {
+    public List<ItemDto> getByText(String text, Long userId, Integer from, Integer size) {
+        List<Item> items;
         if (text.isBlank()) return Collections.emptyList();
-        return itemStorage.getAllText(text).stream()
-                .map(ItemMapper::toItemDto)
-                .collect(toList());
+        PageRequest pageRequest = makePageRequest(from, size, Sort.by("id").ascending());
+        if (pageRequest == null)
+            items = itemStorage.getAllText(text);
+        else
+            items = itemStorage.getAllText(text, pageRequest);
+        return items.stream().map(ItemMapper::toItemDto).collect(toList());
     }
 
     @Override
@@ -156,6 +175,22 @@ public class ItemServiceImpl implements ItemService {
                 .stream()
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ItemDto> getItemsByRequestId(Long requestId) {
+        return itemStorage.findAllByRequest_IdIs(requestId)
+                .stream()
+                .map(ItemMapper::toItemDto)
+                .collect(toList());
+    }
+
+    @Override
+    public List<ItemDto> getItemsByRequests(List<ItemRequest> requests) {
+        return itemStorage.findAllByRequestIn(requests)
+                .stream()
+                .map(ItemMapper::toItemDto)
+                .collect(toList());
     }
 
     private ItemAllDto getItemAllFieldsDto(List<Comment> comments,

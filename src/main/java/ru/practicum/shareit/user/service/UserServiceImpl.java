@@ -13,10 +13,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserStorage;
-
 import java.util.List;
-import java.util.Optional;
-
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
@@ -64,16 +61,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto get(Long id) {
-        Optional<User> user = userStorage.findById(id);
-        if (user.isEmpty()) {
-            throw new ObjectNotFoundException("Пользователь с id = " + id + " не найден");
+        if (id == null) {
+            throw new IncorrectParameterException("Id пользователя не может быть null");
         }
-        return UserMapper.toUserDto(user.get());
+        User user = userStorage.findById(id).orElseThrow(() -> {
+            throw new ObjectNotFoundException("Пользователь с id = " + id + " не найден");
+        });
+
+        return UserMapper.toUserDto(user);
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
+        if (id == null) {
+            throw new IncorrectParameterException("Id не может быть пустым!");
+        }
         userStorage.deleteById(id);
     }
 
