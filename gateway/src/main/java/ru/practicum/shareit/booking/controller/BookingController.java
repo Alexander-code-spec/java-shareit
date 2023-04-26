@@ -13,7 +13,6 @@ import ru.practicum.shareit.errors.exception.IncorrectParameterException;
 
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Positive;
-import javax.validation.Valid;
 import java.time.LocalDate;
 
 
