@@ -10,12 +10,7 @@ import ru.practicum.shareit.booking.dto.BookingState;
 import org.springframework.http.ResponseEntity;
 import ru.practicum.shareit.client.BaseClient;
 import org.springframework.stereotype.Service;
-
 import java.util.Map;
-
-/**
- * @author Oleg Khilko
- */
 
 @Service
 public class BookingClient extends BaseClient {

@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import ru.practicum.shareit.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.Valid;
 

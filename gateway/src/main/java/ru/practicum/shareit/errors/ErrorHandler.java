@@ -11,7 +11,6 @@ import ru.practicum.shareit.errors.exception.IncorrectParameterException;
 import ru.practicum.shareit.errors.exception.ObjectNotFoundException;
 import ru.practicum.shareit.errors.exception.ParameterException;
 import ru.practicum.shareit.errors.model.ErrorResponse;
-
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;

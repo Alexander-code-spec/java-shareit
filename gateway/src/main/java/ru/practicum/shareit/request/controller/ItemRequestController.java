@@ -6,7 +6,6 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import lombok.AllArgsConstructor;
-
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Positive;
 import javax.validation.Valid;

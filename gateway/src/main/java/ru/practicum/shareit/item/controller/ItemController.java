@@ -8,7 +8,6 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import org.springframework.http.ResponseEntity;
 import ru.practicum.shareit.item.dto.ItemDto;
 import lombok.AllArgsConstructor;
-
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.NotNull;

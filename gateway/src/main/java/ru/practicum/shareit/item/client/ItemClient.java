@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.item.dto.ItemDto;
-
 import java.util.Map;
 
 
