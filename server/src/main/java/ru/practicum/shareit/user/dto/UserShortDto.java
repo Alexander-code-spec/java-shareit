@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
-
 
 @Data
 @AllArgsConstructor
@@ -14,6 +12,5 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 public class UserShortDto {
     Long id;
-    @NotEmpty(groups = {Create.class}, message = "Адрес электронной почты не может быть пустым.")
     String name;
 }

@@ -20,13 +20,11 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
-
 import static java.time.LocalDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static ru.practicum.shareit.Enums.States.*;
